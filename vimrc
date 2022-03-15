@@ -34,14 +34,13 @@
     " Text Manipulation
       Plug 'tpope/vim-commentary'
       Plug 'tpope/vim-surround'
-      " Plug 'julianorchard/desc.vim'
       Plug 'dhruvasagar/vim-table-mode'
       Plug 'mg979/vim-visual-multi'
-    "NERD
+    " NerdTree
       Plug 'preservim/nerdtree' |
         \ Plug 'Xuyuanp/nerdtree-git-plugin'
       Plug 'ryanoasis/vim-devicons'
-    "Lang
+    " Language
       Plug 'dense-analysis/ale'
       " Plug 'alvan/vim-closteag'
       " Plug 'mattn/vim-lsp-settings'
@@ -49,13 +48,18 @@
       " Plug 'prabirshrestha/asyncomplete-lsp.vim'
       " Plug 'prabirshrestha/asyncomplete.vim'
       " Plug 'prabirshrestha/vim-lsp'
+    " Under Development
+      try 
+        source ~/desc.vim/plugin/desc.vim
+      catch
+        Plug 'julianorchard/desc.vim'
+      endtry
     call plug#end()
 
 " PLUG SETTINGS
   " Desc
     let g:desc_author = [["desc", "Julian Orchard <hello@julianorchard.co.uk>"], 
                         \["wesc", "Wessex Lifts <marketing@wessexlifts.co.uk>"]]
-    source ~/desc.vim/plugin/desc.vim
 	" Colourscheme
 		color louver
 		let g:airline_theme='silver'
@@ -82,7 +86,11 @@
   "Vim Gist
     " ~/.vim-gist file wasn't working, source a file with:
     "   let g:gist_token = 'TOKEN'
-    source ~/.vim/gist.vim
+    try
+      source ~/.vim/gist.vim
+    catch
+      echom "ERROR SOURCING ~/.vim/gist.vim: Vim Gist needs token in ~/.vim/gist.vim"
+    endtry
 	"asyncomplete.vim
     " inoremap <expr> <Tab>   pumvisible() ? "\<C-n>" : "\<Tab>"
     " inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
