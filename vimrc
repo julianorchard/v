@@ -7,48 +7,51 @@
 
   se viminfo+=n~/.vim/viminfo
 
-" Plug Load 
-	if empty(glob('~/.vim/autoload/plug.vim'))
-		silent !curl -fLo ~\.vim\autoload\plug.vim --create-dirs 
-					\ https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
-		aug PLUG
-			au!
-			au VimEnter * PlugInstall --sync | source $MYVIMRC
-		aug END
-	endif  
+" PLUG STUFF
+  " Plug Load 
+    if empty(glob('~/.vim/autoload/plug.vim'))
+      silent !curl -fLo ~\.vim\autoload\plug.vim --create-dirs 
+            \ https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+      aug PLUG
+        au!
+        au VimEnter * PlugInstall --sync | source $MYVIMRC
+      aug END
+    endif  
 
-" Plug List
-	call plug#begin('~/.vim/plugged')
-  " Appearance 
-		Plug 'flazz/vim-colorschemes'
-		Plug 'junegunn/goyo.vim'
-		Plug 'junegunn/limelight.vim'
-		Plug 'vim-airline/vim-airline'
-		Plug 'vim-airline/vim-airline-themes'
-  " Org-Like
-		Plug 'itchyny/calendar.vim'
-    Plug 'dhruvasagar/vim-dotoo'
-  " Text Manipulation
-		Plug 'tpope/vim-commentary'
-		Plug 'tpope/vim-surround'
-    " Plug 'julianorchard/desc.vim'
-    Plug 'dhruvasagar/vim-table-mode'
-    Plug 'mg979/vim-visual-multi'
-	"NERD
-		Plug 'preservim/nerdtree' |
-			\ Plug 'Xuyuanp/nerdtree-git-plugin'
-		Plug 'ryanoasis/vim-devicons'
-	"Lang
- 		Plug 'dense-analysis/ale'
-    " Plug 'alvan/vim-closteag'
-    " Plug 'mattn/vim-lsp-settings'
-    " Plug 'pangloss/vim-javascript'
-    " Plug 'prabirshrestha/asyncomplete-lsp.vim'
-    " Plug 'prabirshrestha/asyncomplete.vim'
-    " Plug 'prabirshrestha/vim-lsp'
-	call plug#end()
+  " Plug List
+    call plug#begin('~/.vim/plugged')
+    " Appearance 
+      Plug 'flazz/vim-colorschemes'
+      Plug 'junegunn/goyo.vim'
+      Plug 'junegunn/limelight.vim'
+      Plug 'vim-airline/vim-airline'
+      Plug 'vim-airline/vim-airline-themes'
+    " Org-Like
+      Plug 'itchyny/calendar.vim'
+      Plug 'dhruvasagar/vim-dotoo'
+      Plug 'mattn/vim-gist'
+      Plug 'mattn/webapi-vim'
+    " Text Manipulation
+      Plug 'tpope/vim-commentary'
+      Plug 'tpope/vim-surround'
+      " Plug 'julianorchard/desc.vim'
+      Plug 'dhruvasagar/vim-table-mode'
+      Plug 'mg979/vim-visual-multi'
+    "NERD
+      Plug 'preservim/nerdtree' |
+        \ Plug 'Xuyuanp/nerdtree-git-plugin'
+      Plug 'ryanoasis/vim-devicons'
+    "Lang
+      Plug 'dense-analysis/ale'
+      " Plug 'alvan/vim-closteag'
+      " Plug 'mattn/vim-lsp-settings'
+      " Plug 'pangloss/vim-javascript'
+      " Plug 'prabirshrestha/asyncomplete-lsp.vim'
+      " Plug 'prabirshrestha/asyncomplete.vim'
+      " Plug 'prabirshrestha/vim-lsp'
+    call plug#end()
 
-" Plug setings
+" PLUG SETTINGS
   " Desc
     let g:desc_author = [["desc", "Julian Orchard <hello@julianorchard.co.uk>"], 
                         \["wesc", "Wessex Lifts <marketing@wessexlifts.co.uk>"]]
@@ -76,11 +79,17 @@
 		let g:NERDTreeDirArrowCollapsible = '  ↘'
 		let NERDTreeShowHidden=1
 		nn <C-t> :NERDTreeToggle<CR>
+  "Vim Gist
+    " ~/.vim-gist file wasn't working, source a file with:
+    "   let g:gist_token = 'TOKEN'
+    source ~/.vim/gist.vim
 	"asyncomplete.vim
- "	inoremap <expr> <Tab>   pumvisible() ? "\<C-n>" : "\<Tab>"
- "	inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
- "	inoremap <expr> <cr>    pumvisible() ? asyncomplete#close_popup() : "\<cr>"
+    " inoremap <expr> <Tab>   pumvisible() ? "\<C-n>" : "\<Tab>"
+    " inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
+    " inoremap <expr> <cr>    pumvisible() ? asyncomplete#close_popup() : "\<cr>"
 	
+
+" -~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~--~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~--~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-
 " General
 	syntax on 
 	se belloff=all
@@ -165,6 +174,8 @@
 " Abbreviations
   iab @@ hello@julianorchard.co.uk
   iab ~~ Julian Orchard <hello@julianorchard.co.uk>
+  iab <expr> ~g substitute(system('git config --global user.name') . " <" . 
+     \system('git config --global user.email') . ">", '\n', '', 'g') 
   iab lipsum 
         \ Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
         \ eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim
