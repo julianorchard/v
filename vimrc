@@ -1,24 +1,24 @@
-" -~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~--~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-"
-" File:       vimrc                                                 "
-" Author:     julianorchard <hello@julianorchard.co.uk>             "
-" Tag Added:  2022-03-14                                            "
-" Desciption: My vimrc file, stored in ~/.vim/vimrc, always.        "
-" -~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~--~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-"
+" ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ "
+"         File:       vimrc                                                    "
+"         Author:     julianorchard <hello@julianorchard.co.uk>                "
+"         Tag Added:  2022-03-14                                               "
+"         Desciption: My vimrc file, stored in ~/.vim/vimrc, always.           "
+" ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ "
 
+  se all&
   se viminfo+=n~/.vim/viminfo
 
-" PLUG STUFF
-  " Plug Load 
+" ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ PLUG LOAD  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ "
     if empty(glob('~/.vim/autoload/plug.vim'))
       silent !curl -fLo ~\.vim\autoload\plug.vim --create-dirs 
             \ https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
       aug PLUG
         au!
-        au VimEnter * PlugInstall --sync | source $MYVIMRC
+        au VimEnter * PlugInstall --sync | so $MYVIMRC
       aug END
-    endif  
+    en
 
-  " Plug List
+" ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ PLUGIN LIST ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ "
     call plug#begin('~/.vim/plugged')
     " Appearance 
       Plug 'flazz/vim-colorschemes'
@@ -51,13 +51,13 @@
       " Plug 'prabirshrestha/vim-lsp'
     " Under Development
       try 
-        source ~/desc.vim/plugin/desc.vim
-      catch
+        so ~/desc.vim/plugin/desc.vim
+      cat
         Plug 'julianorchard/desc.vim'
-      endtry
+      endt
     call plug#end()
 
-" PLUG SETTINGS
+" ~~~~~~~~~~~~~~~~~~~~~~~~~~ PLUGIN CONFIGURATIONS ~~~~~~~~~~~~~~~~~~~~~~~~~~~ "
   " Desc
     let g:desc_author = [["desc", "Julian Orchard <hello@julianorchard.co.uk>"], 
                         \["wesc", "Wessex Lifts <marketing@wessexlifts.co.uk>"]]
@@ -78,7 +78,7 @@
     aug NERD
       au!
       au BufEnter * if tabpagenr('$') == 1 && winnr('$') == 1 && 
-      \exists('b:NERDTree') && b:NERDTree.isTabTree() | quit | endif
+      \exists('b:NERDTree') && b:NERDTree.isTabTree() | quit | en
     aug END
     let g:NERDTreeDirArrowExpandable = ' |'
     let g:NERDTreeDirArrowCollapsible = '  ↘'
@@ -88,18 +88,17 @@
     " ~/.vim-gist file wasn't working, source a file with:
     "   let g:gist_token = 'TOKEN'
     try
-      source ~/.vim/gist.vim
-    catch
+      so ~/.vim/gist.vim
+    cat
       echom "ERROR SOURCING ~/.vim/gist.vim: Vim Gist needs token in ~/.vim/gist.vim"
-    endtry
+    endt
   "asyncomplete.vim
     " inoremap <expr> <Tab>   pumvisible() ? "\<C-n>" : "\<Tab>"
     " inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
     " inoremap <expr> <cr>    pumvisible() ? asyncomplete#close_popup() : "\<cr>"
   
 
-" -~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~--~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~--~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-
-" General
+" ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ GENERAL SETTINGS ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ "
   syntax on 
   se belloff=all
   se encoding=utf-8
@@ -118,13 +117,20 @@
   se ttymouse=
   se wildmenu
 
-" Auto Comment Insertion, Off
+" ~~~~~~~~~~~~~~~~~~~~~~~~~ PERSISTENT FILE HISTORY ~~~~~~~~~~~~~~~~~~~~~~~~~~ "
+  if has('persistent_undo')
+    silent !mkdir ~/.vim/backups > /dev/null 2>&1
+    se undodir=~/.vim/backups
+    se undofile
+  en
+
+" ~~~~~~~~~~~~~~~~~~~~~~~ AUTO COMMENT INSERTION, OFF ~~~~~~~~~~~~~~~~~~~~~~~~ "
   aug AUTOCOMMENTOFF
     au!
     au FileType * setl formatoptions-=c formatoptions-=r formatoptions-=o
   aug END
 
-" Wrapping and Line Breaks
+" ~~~~~~~~~~~~~~~~~~~~~~~~~ WRAPPING AND LINE BREAKS ~~~~~~~~~~~~~~~~~~~~~~~~~ "
   se formatoptions-=t
   se formatoptions-=t0
   se linebreak
@@ -133,62 +139,103 @@
   se textwidth=80
   se wrap
 
-" Shifting
+" ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ SHIFTING ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ "
   se autoindent
   se shiftround
   se smartindent 
   if has("autocmd")
     filetype plugin indent on
-  endif 
+  en
   se cpoptions  +=I
 
-" Number Stuff
+" ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ NUMBER STUFF ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ "
   se number 
   se relativenumber
 
-" Search
+" ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ SEARCH ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ "
   se hlsearch
   se ic
   se incsearch
   se showmatch
 
-" Visual Mode 
+" ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ VISUAL MODE  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ "
   vn <c-v> <c-q>" Tab
 
-" Tab Tab Tab
+" ~~~~~~~~~~~~~~~~~~~~~~~~~~~ TAB SETTINGS GENERAL ~~~~~~~~~~~~~~~~~~~~~~~~~~~ "
   se tabstop=2 softtabstop=2 shiftwidth=2 expandtab
   "Useful Visual Tab
   vn <tab> >vgv
   vn <s-tab> <vgv
 
-" Make hjkl Graphical
+" ~~~~~~~~~~~~~~~~~~~~~~~~~~ MAKING HJKL GRAPHICAL ~~~~~~~~~~~~~~~~~~~~~~~~~~~ "
   nn j gj
   nn k gk
   vn j gj
   vn k gk
 
-" 'd' Deletes, Doesn't Cut
+" ~~~~~~~~~~~~~~~~~~ 'D' JUST DELETES, DOESN'T CUT ANYMORE ~~~~~~~~~~~~~~~~~~~ "
   nn d "_d
   vn d "_d
 
-" Split Nav
+" ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ SPLIT NAVIGATION ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ "
   nn <c-j> <C-W><C-J>
   nn <c-k> <C-W><C-K>
   nn <c-l> <C-W><C-L>
   nn <c-h> <C-W><C-H>
 
-" Go
-  nn <c-b> :!go run % <cr>
+" ~~~~~~~~~~~~~~~~~~~ COMM, CENTER COMMENTS IN NORMAL MODE ~~~~~~~~~~~~~~~~~~~ "
+" Work in progress; 
+"   - check line isn't too long for the wrapping
+"   - fix issues with current comment substitution
+  fun! s:CenterComment(...)
+    " Comment Strings
+      let [l,r] = split(get(b:, 'commentary_format', 
+      \ substitute(&commentstring, '^$', '%s', '')), '%s', 1)
+      if r == "" 
+        let r = l 
+      en 
+    " Chars and Text
+      try 
+        let l:line_char = a:1
+      cat
+        let l:line_char = "-"
+      endt
+      let l:line_text = " " . toupper(substitute(substitute(getline('.')
+            \, ".*" . l "^\s*", "", ""), r, "", "")) . " "
+      let l:line_len = ((80 - strlen(l:line_text)) / 2) - 2
+    " Make oddly numbered lines even
+      let l:fill_char = ""
+      if strlen(l:line_text) % 2 == 1
+        let l:fill_char = l:line_char[0]
+      en
+    " Create the Line Parts
+      let l:i = 1
+      wh l:i < l:line_len
+        let l:i += 1
+        let l:line_char = l:line_char . l:line_char[0]
+      endw
+    call setline(line("."), substitute(getline('.'), 
+          \ getline('.'), l . " ". l:line_char . l:line_text . 
+          \ l:line_char . l:fill_char . " " . r, "g"))
+  endfun
+  " Function only accepts single chars
+    nn comm- :call <SID>CenterComment("-")<cr>
+    nn comm~ :call <SID>CenterComment("~")<cr>
+    nn comm@ :call <SID>CenterComment("@")<cr>
+    nn comm! :call <SID>CenterComment("!")<cr>
+    nn comm* :call <SID>CenterComment("*")<cr>
 
-" Abbreviations
+
+" ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ABBREVIATIONS ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ "
   iab @@ hello@julianorchard.co.uk
   iab ~~ Julian Orchard <hello@julianorchard.co.uk>
   iab <expr> ~g substitute(system('git config --global user.name') . " <" . 
      \system('git config --global user.email') . ">", '\n', '', 'g') 
   iab lipsum 
-        \ Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-        \ eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim
-        \ veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea
-        \ commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit
-        \ esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat
-        \ non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+\ Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
+\ eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim
+\ veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea
+\ commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit
+\ esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat
+\ non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+
