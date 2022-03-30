@@ -1,3 +1,4 @@
+" !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! VIMRC !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! "
 " ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ "
 "         File:       vimrc                                                    "
 "         Author:     julianorchard <hello@julianorchard.co.uk>                "
@@ -5,17 +6,29 @@
 "         Desciption: My vimrc file, stored in ~/.vim/vimrc, always.           "
 " ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ "
 
-  se all&
-  se viminfo+=n~/.vim/viminfo
+    se all&
+    se viminfo+=n~/.vim/viminfo
+
+"                  AUTO-COPY VIMRC TO WIN LOCATION, IF CYGWIN                  "
+" ~~~~~~~~~~~~~~~~~~~ AND IF IT'S A VIM FILE BEING EDITED ~~~~~~~~~~~~~~~~~~~~ "
+    if expand('%:p:h') =~ '.vim' && has('win32unix')
+      silent !cp ~/.vim/vimrc ~/vimfiles/vimrc
+      silent !cp ~/.vim/gvimrc ~/vimfiles/gvimrc
+    en
 
 " ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ PLUG LOAD  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ "
     if empty(glob('~/.vim/autoload/plug.vim'))
-      silent !curl -fLo ~\.vim\autoload\plug.vim --create-dirs 
-            \ https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
-      aug PLUG
-        au!
-        au VimEnter * PlugInstall --sync | so $MYVIMRC
-      aug END
+      if has('win32unix') || has('unix')
+        silent !curl -fLo ~\.vim\autoload\plug.vim --create-dirs 
+              \ https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+        aug PLUG
+          au!
+          au VimEnter * PlugInstall --sync | so $MYVIMRC
+        aug END
+      el
+        " Use ps1 Script to Install
+        echom "Please install Plugins with Cygwin, or script."
+      en
     en
 
 " ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ PLUGIN LIST ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ "
@@ -96,11 +109,11 @@
     " inoremap <expr> <Tab>   pumvisible() ? "\<C-n>" : "\<Tab>"
     " inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
     " inoremap <expr> <cr>    pumvisible() ? asyncomplete#close_popup() : "\<cr>"
-  
 
 " ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ GENERAL SETTINGS ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ "
   syntax on 
-  se belloff=all
+  setg printoptions=paper:letter
+  set noeb vb t_vb=
   se encoding=utf-8
   se fileencoding=utf-8
   se fileencodings=utf-8
@@ -116,6 +129,7 @@
   se ttyfast
   se ttymouse=
   se wildmenu
+
 
 " ~~~~~~~~~~~~~~~~~~~~~~~~~ PERSISTENT FILE HISTORY ~~~~~~~~~~~~~~~~~~~~~~~~~~ "
   if has('persistent_undo')
@@ -185,12 +199,11 @@
 
 " ~~~~~~~~~~~~~~~~~~~ COMM, CENTER COMMENTS IN NORMAL MODE ~~~~~~~~~~~~~~~~~~~ "
 " Work in progress; 
-"   - check line isn't too long for the wrapping
 "   - fix issues with current comment substitution
   fun! s:CenterComment(...)
     " Comment Strings
       let [l,r] = split(get(b:, 'commentary_format', 
-      \ substitute(&commentstring, '^$', '%s', '')), '%s', 1)
+        \substitute(&commentstring, '^$', '%s', '')), '%s', 1)
       if r == "" 
         let r = l 
       en 
@@ -198,27 +211,33 @@
       try 
         let l:line_char = a:1
       cat
-        let l:line_char = "-"
+        let l:line_char = " "
       endt
       let l:line_text = " " . toupper(substitute(substitute(getline('.')
-            \, ".*" . l "^\s*", "", ""), r, "", "")) . " "
+            \, ".*" . l, "", ""), r, "", "")) . " "
       let l:line_len = ((80 - strlen(l:line_text)) / 2) - 2
-    " Make oddly numbered lines even
-      let l:fill_char = ""
-      if strlen(l:line_text) % 2 == 1
-        let l:fill_char = l:line_char[0]
+      if l:line_len < 6
+        echom "This line is too long to add a title to."
+      el
+      " Make oddly numbered lines even
+        let l:fill_char = ""
+        if strlen(l:line_text) % 2 == 1
+          let l:fill_char = l:line_char
+        en
+      " Create the Line Parts
+        let l:i = 1
+        wh l:i < l:line_len
+          let l:i += 1
+          let l:line_char = l:line_char . l:line_char[0]
+        endw
+      " Insert the Line and Text
+        call setline(line("."), substitute(getline('.'), 
+              \ getline('.'), l . " ". l:line_char . l:line_text . 
+              \ l:line_char . l:fill_char . " " . r, "g"))
       en
-    " Create the Line Parts
-      let l:i = 1
-      wh l:i < l:line_len
-        let l:i += 1
-        let l:line_char = l:line_char . l:line_char[0]
-      endw
-    call setline(line("."), substitute(getline('.'), 
-          \ getline('.'), l . " ". l:line_char . l:line_text . 
-          \ l:line_char . l:fill_char . " " . r, "g"))
   endfun
   " Function only accepts single chars
+    nn comm  :call <SID>CenterComment(" ")<cr>
     nn comm- :call <SID>CenterComment("-")<cr>
     nn comm~ :call <SID>CenterComment("~")<cr>
     nn comm@ :call <SID>CenterComment("@")<cr>
