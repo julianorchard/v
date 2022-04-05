@@ -18,6 +18,9 @@
   se guioptions-=tT
   se guitabtooltip=%{InfoGuiTooltip()}
   se balloonexpr=FoldSpellBalloon()
+
+" ---------------------------------- LEADER ---------------------------------- "
+  let mapleader = ","
   
 " ----------------------------------  FONT  ---------------------------------- "
   if has('win32') || has('win32unix')
@@ -39,5 +42,7 @@
   augroup END
 
 " ------------------------- REMAP (AND TO AUTO-SAVE) ------------------------- "
-  nnoremap :q :wqa
-
+  if expand('%:p:h') =~ 'vim-anywhere'
+    se fo+=a
+    nn <Leader>q :wqa<cr>
+  en

@@ -112,24 +112,19 @@
 
 " ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ GENERAL SETTINGS ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ "
   syntax on 
-  setg printoptions=paper:letter
-  set noeb vb t_vb=
-  se encoding=utf-8
-  se fileencoding=utf-8
-  se fileencodings=utf-8
-  se history=1000
-  se laststatus=2
-  se lazyredraw
-  se mouse=
-  se noshowmatch
-  se nostartofline
-  se noswapfile
-  se shortmess=atI
-  se title
-  se ttyfast
-  se ttymouse=
-  se wildmenu
-
+  se popt=paper:A4           " print options
+  set noeb vb t_vb=          " no error bells
+  se enc=utf8                " file encoding 
+  se history=1000            " command (:) hist
+  se mouse=                  " mouse (default)
+  se nosm                    " matching bracket on insert
+  se nosol                   " jump to rough current cursor position
+  se noswapfile              " yep
+  se shm=a                   " avoid all 'hit enter to continue'
+  se title                   " title bar title (content below)
+  se titlestring=vim:\ %-25.55F\ %a%r%m titlelen=70
+  se tf                      " better xterm mainly experience 
+  se backspace=indent,eol,start
 
 " ~~~~~~~~~~~~~~~~~~~~~~~~~ PERSISTENT FILE HISTORY ~~~~~~~~~~~~~~~~~~~~~~~~~~ "
   if has('persistent_undo')
@@ -138,20 +133,12 @@
     se undofile
   en
 
-" ~~~~~~~~~~~~~~~~~~~~~~~ AUTO COMMENT INSERTION, OFF ~~~~~~~~~~~~~~~~~~~~~~~~ "
-  aug AUTOCOMMENTOFF
-    au!
-    au FileType * setl formatoptions-=c formatoptions-=r formatoptions-=o
-  aug END
-
 " ~~~~~~~~~~~~~~~~~~~~~~~~~ WRAPPING AND LINE BREAKS ~~~~~~~~~~~~~~~~~~~~~~~~~ "
-  se formatoptions-=t
-  se formatoptions-=t0
-  se linebreak
-  se nolist  
-  se scrolloff=13
+  se fo+=q fo+=t
+  se fo-=o fo-=c fo-=r 
+  se nolist 
+  se scrolloff=13 
   se textwidth=80
-  se wrap
 
 " ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ SHIFTING ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ "
   se autoindent
@@ -186,6 +173,10 @@
   nn k gk
   vn j gj
   vn k gk
+
+"                 THIS ONLY WORKS IN GVIM, AS FAR AS I'M AWARE                 "
+" ~~~~~~~~~ CTRL + BACKSPACE TO DELETE PREVIOUS WORD IN INSERT MODE ~~~~~~~~~~ "
+  im <C-BS> <C-w>
 
 " ~~~~~~~~~~~~~~~~~~ 'D' JUST DELETES, DOESN'T CUT ANYMORE ~~~~~~~~~~~~~~~~~~~ "
   nn d "_d
@@ -257,4 +248,3 @@
 \ commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit
 \ esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat
 \ non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-
