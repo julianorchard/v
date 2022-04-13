@@ -33,7 +33,9 @@
 
 " ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ PLUGIN LIST ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ "
     call plug#begin('~/.vim/plugged')
+      Plug 'tpope/vim-sensible'
     " Appearance 
+      Plug 'blueyed/vim-diminactive'
       Plug 'flazz/vim-colorschemes'
       Plug 'junegunn/goyo.vim'
       Plug 'junegunn/limelight.vim'
@@ -74,6 +76,9 @@
   " Desc
     let g:desc_author = [["desc", "Julian Orchard <hello@julianorchard.co.uk>"], 
                         \["wesc", "Wessex Lifts <marketing@wessexlifts.co.uk>"]]
+	" Diminactive
+	  let g:diminactive_use_colorcolumn = 0
+
   " Colourscheme
     color louver
     let g:airline_theme='silver'
