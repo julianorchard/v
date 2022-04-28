@@ -19,7 +19,7 @@
 " ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ PLUG LOAD  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ "
     if empty(glob('~/.vim/autoload/plug.vim'))
       if has('win32unix') || has('unix')
-        silent !curl -fLo ~\.vim\autoload\plug.vim --create-dirs 
+        silent !curl -fLo ~\.vim\autoload\plug.vim --create-dirs
               \ https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
         aug PLUG
           au!
@@ -34,7 +34,7 @@
 " ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ PLUGIN LIST ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ "
     call plug#begin('~/.vim/plugged')
       Plug 'tpope/vim-sensible'
-    " Appearance 
+    " Appearance
       Plug 'blueyed/vim-diminactive'
       Plug 'flazz/vim-colorschemes'
       Plug 'junegunn/goyo.vim'
@@ -65,7 +65,7 @@
       " Plug 'prabirshrestha/asyncomplete.vim'
       " Plug 'prabirshrestha/vim-lsp'
     " Under Development
-      try 
+      try
         so ~/desc.vim/plugin/desc.vim
       cat
         Plug 'julianorchard/desc.vim'
@@ -74,10 +74,10 @@
 
 " ~~~~~~~~~~~~~~~~~~~~~~~~~~ PLUGIN CONFIGURATIONS ~~~~~~~~~~~~~~~~~~~~~~~~~~~ "
   " Desc
-    let g:desc_author = [["desc", "Julian Orchard <hello@julianorchard.co.uk>"], 
+    let g:desc_author = [["desc", "Julian Orchard <hello@julianorchard.co.uk>"],
                         \["wesc", "Wessex Lifts <marketing@wessexlifts.co.uk>"]]
-	" Diminactive
-	  let g:diminactive_use_colorcolumn = 0
+  " Diminactive
+    let g:diminactive_use_colorcolumn = 0
 
   " Colourscheme
     color louver
@@ -95,7 +95,7 @@
   "NERDTree
     aug NERD
       au!
-      au BufEnter * if tabpagenr('$') == 1 && winnr('$') == 1 && 
+      au BufEnter * if tabpagenr('$') == 1 && winnr('$') == 1 &&
       \exists('b:NERDTree') && b:NERDTree.isTabTree() | quit | en
     aug END
     let g:NERDTreeDirArrowExpandable = ' |'
@@ -116,20 +116,26 @@
     " inoremap <expr> <cr>    pumvisible() ? asyncomplete#close_popup() : "\<cr>"
 
 " ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ GENERAL SETTINGS ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ "
-  syntax on 
+  syntax on
   se popt=paper:A4           " print options
   set noeb vb t_vb=          " no error bells
-  se enc=utf8                " file encoding 
+  se enc=utf8                " file encoding
   se history=1000            " command (:) hist
   se mouse=                  " mouse (default)
   se nosm                    " matching bracket on insert
   se nosol                   " jump to rough current cursor position
-  se noswapfile              " yep
+"  se noswapfile              " yep
   se shm=a                   " avoid all 'hit enter to continue'
   se title                   " title bar title (content below)
   se titlestring=vim:\ %-25.55F\ %a%r%m titlelen=70
-  se tf                      " better xterm mainly experience 
+  se tf                      " better xterm mainly experience
   se backspace=indent,eol,start
+
+" ~~~~~~~~~~~~~~~~~~~~~~~~~~ REMOVE TRAILING SPACES ~~~~~~~~~~~~~~~~~~~~~~~~~~ "
+  aug RTS
+    au!
+    au BufWritePre * :%s/\s\+$//e
+  aug END
 
 " ~~~~~~~~~~~~~~~~~~~~~~~~~ PERSISTENT FILE HISTORY ~~~~~~~~~~~~~~~~~~~~~~~~~~ "
   if has('persistent_undo')
@@ -140,22 +146,24 @@
 
 " ~~~~~~~~~~~~~~~~~~~~~~~~~ WRAPPING AND LINE BREAKS ~~~~~~~~~~~~~~~~~~~~~~~~~ "
   se fo+=q fo+=t
-  se fo-=o fo-=c fo-=r 
-  se nolist 
-  se scrolloff=13 
+  if has("autocmd")
+    autocmd FileType * setlocal formatoptions-=c formatoptions-=r formatoptions-=o
+  en
+  se nolist
+  se scrolloff=13
   se textwidth=80
 
 " ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ SHIFTING ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ "
   se autoindent
   se shiftround
-  se smartindent 
+  se smartindent
   if has("autocmd")
     filetype plugin indent on
   en
   se cpoptions  +=I
 
 " ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ NUMBER STUFF ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ "
-  se number 
+  se number
   se relativenumber
 
 " ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ SEARCH ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ "
@@ -165,27 +173,14 @@
   se showmatch
 
 " ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ VISUAL MODE  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ "
-  vn <c-v> <c-q>" Tab
-
-" ~~~~~~~~~~~~~~~~~~~~~~~~~~~ TAB SETTINGS GENERAL ~~~~~~~~~~~~~~~~~~~~~~~~~~~ "
-  se tabstop=2 softtabstop=2 shiftwidth=2 expandtab
-  "Useful Visual Tab
+  " vn <c-v> <c-q>" Tab
+  se ts=2 shiftwidth=2 et
   vn <tab> >vgv
   vn <s-tab> <vgv
-
-" ~~~~~~~~~~~~~~~~~~~~~~~~~~ MAKING HJKL GRAPHICAL ~~~~~~~~~~~~~~~~~~~~~~~~~~~ "
   nn j gj
   nn k gk
   vn j gj
   vn k gk
-
-"                 THIS ONLY WORKS IN GVIM, AS FAR AS I'M AWARE                 "
-" ~~~~~~~~~ CTRL + BACKSPACE TO DELETE PREVIOUS WORD IN INSERT MODE ~~~~~~~~~~ "
-  im <C-BS> <C-w>
-
-" ~~~~~~~~~~~~~~~~~~ 'D' JUST DELETES, DOESN'T CUT ANYMORE ~~~~~~~~~~~~~~~~~~~ "
-  nn d "_d
-  vn d "_d
 
 " ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ SPLIT NAVIGATION ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ "
   nn <c-j> <C-W><C-J>
@@ -194,17 +189,17 @@
   nn <c-h> <C-W><C-H>
 
 " ~~~~~~~~~~~~~~~~~~~ COMM, CENTER COMMENTS IN NORMAL MODE ~~~~~~~~~~~~~~~~~~~ "
-" Work in progress; 
+" Work in progress;
 "   - fix issues with current comment substitution
   fun! s:CenterComment(...)
     " Comment Strings
-      let [l,r] = split(get(b:, 'commentary_format', 
+      let [l,r] = split(get(b:, 'commentary_format',
         \substitute(&commentstring, '^$', '%s', '')), '%s', 1)
-      if r == "" 
-        let r = l 
-      en 
+      if r == ""
+        let r = l
+      en
     " Chars and Text
-      try 
+      try
         let l:line_char = a:1
       cat
         let l:line_char = " "
@@ -227,8 +222,8 @@
           let l:line_char = l:line_char . l:line_char[0]
         endw
       " Insert the Line and Text
-        call setline(line("."), substitute(getline('.'), 
-              \ getline('.'), l . " ". l:line_char . l:line_text . 
+        call setline(line("."), substitute(getline('.'),
+              \ getline('.'), l . " ". l:line_char . l:line_text .
               \ l:line_char . l:fill_char . " " . r, "g"))
       en
   endfun
@@ -243,10 +238,12 @@
 
 " ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ABBREVIATIONS ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ "
   iab @@ hello@julianorchard.co.uk
+  iab rubyenv #!/c/MAMP/bin/ruby/bin/ruby.exe
+  iab pythonenv #!/c/MAMP/bin/python/bin/python.exe
   iab ~~ Julian Orchard <hello@julianorchard.co.uk>
-  iab <expr> ~g substitute(system('git config --global user.name') . " <" . 
-     \system('git config --global user.email') . ">", '\n', '', 'g') 
-  iab lipsum 
+  iab <expr> ~g substitute(system('git config --global user.name') . " <" .
+     \system('git config --global user.email') . ">", '\n', '', 'g')
+  iab lipsum
 \ Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
 \ eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim
 \ veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea
