@@ -41,6 +41,9 @@
     autocmd VimEnter * :Goyo 55
   augroup END
 
+" --------- CTRL + BACKSPACE TO DELETE PREVIOUS WORD IN INSERT MODE ---------- "
+  im <C-BS> <C-w>
+
 " ------------------------- REMAP (AND TO AUTO-SAVE) ------------------------- "
   if expand('%:p:h') =~ 'vim-anywhere'
     se fo+=a
