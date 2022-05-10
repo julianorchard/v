@@ -173,7 +173,7 @@
   se showmatch
 
 " ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ VISUAL MODE  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ "
-  " vn <c-v> <c-q>" Tab
+  se list lcs=tab:·\ ,nbsp:␣
   se ts=2 shiftwidth=2 et
   vn <tab> >vgv
   vn <s-tab> <vgv
