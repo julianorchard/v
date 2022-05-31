@@ -124,7 +124,7 @@
   se mouse=                  " mouse (default)
   se nosm                    " matching bracket on insert
   se nosol                   " jump to rough current cursor position
-"  se noswapfile              " yep
+  se noswapfile              " yep
   se shm=a                   " avoid all 'hit enter to continue'
   se title                   " title bar title (content below)
   se titlestring=vim:\ %-25.55F\ %a%r%m titlelen=70
